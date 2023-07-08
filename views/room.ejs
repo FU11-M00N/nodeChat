@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Document</title>
+   </head>
+   <body>
+      <h1>룸 진입</h1>
+      <script src="/socket.io/socket.io.js"></script>
+      <script>
+         const socket = io.connect('http://localhost:3000/room', {
+            path: '/socket.io',
+            transports: ['websocket'],
+         });
+         socket.on('usercnt', function (data) {
+            const [room1, room2] = data?.cnt;
+            if (room1) {
+               document.querySelector('#room1').innerHTML = room1;
+            }
+            if (room2) {
+               document.querySelector('#room2').innerHTML = room2;
+            }
+         });
+      </script>
+      <table>
+         <thead>
+            <tr>
+               <th>방번호</th>
+               <th>인원수</th>
+               <th>참가</th>
+            </tr>
+         </thead>
+         <tbody>
+            <tr>
+               <td>1</td>
+               <td id="room1">0</td>
+               <td>
+                  <form action="room/1" method="GET">
+                     <button type="submit">참가</button>
+                  </form>
+               </td>
+            </tr>
+            <tr>
+               <td>2</td>
+               <td id="room2">0</td>
+               <td>
+                  <form action="room/2" method="GET">
+                     <button type="submit">참가</button>
+                  </form>
+               </td>
+            </tr>
+         </tbody>
+      </table>
+   </body>
+</html>

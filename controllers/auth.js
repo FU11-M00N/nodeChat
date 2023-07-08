@@ -5,7 +5,7 @@ const User = require('../models/user');
 exports.login = async (req, res) => {
    try {
       const { username, password } = req.body;
-      console.log(username, password);
+
       const user = await User.findOne({
          where: { username },
       });
@@ -21,8 +21,7 @@ exports.login = async (req, res) => {
          id: user.id,
          username: user.username,
       };
-      console.log(req.session);
-      console.log(req.session.user);
+
       res.status(200).redirect('/');
    } catch (error) {
       console.error(error);
@@ -39,7 +38,7 @@ exports.join = async (req, res) => {
          username,
          password: hash,
       });
-      res.status(201).render('/login');
+      res.status(201).redirect('/');
    } catch (error) {
       console.error(error);
    }
