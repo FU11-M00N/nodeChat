@@ -17,22 +17,37 @@
          <input type="text" id="chat" name="chat" />
          <button type="submit">전송</button>
       </form>
+      <div>
+         방 번호 : <%= room.id%> <br />
+         참여 인원 : <span id="cnt">0</span> <br />
+         유저 목록 :
+         <div id="user">홍길동</div>
+      </div>
+
       <script src="/socket.io/socket.io.js"></script>
       <script>
          const socket = io.connect('http://localhost:3000/chat', {
             path: '/socket.io',
             transports: ['websocket'],
          });
-         socket.emit('join', new URL(location).pathname.split('/').at(-1));
+         const username = '<%= user%>';
+         const data = { roomId: new URL(location).pathname.split('/').at(-1), username };
+
+         socket.emit('join', data);
 
          socket.on('join', function (data) {
+            console.log('클라이언트 데이터', data);
+            document.querySelector('#cnt').innerHTML = data.cnt;
             const div = document.createElement('div');
             div.classList.add('system');
             const chat = document.createElement('div');
             div.textContent = data.chat;
             div.appendChild(chat);
             document.querySelector('#chat-list').appendChild(div);
+
+            document.querySelector('#user').innerHTML = data.connectedUsers;
          });
+
          socket.on('exit', function (data) {
             const div = document.createElement('div');
             div.classList.add('system');
@@ -40,6 +55,7 @@
             chat.textContent = data.chat;
             div.appendChild(chat);
             document.querySelector('#chat-list').appendChild(div);
+            document.querySelector('#user').innerHTML = data.connectedUsers;
          });
 
          document.querySelector('#chat-form').addEventListener('submit', function (e) {
