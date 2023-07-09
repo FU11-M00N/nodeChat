@@ -15,9 +15,10 @@ exports.renderJoin = (req, res) => {
    res.render('join.ejs');
 };
 exports.renderRooms = (req, res) => {
+   // 방 2개 생성
    const data = [
-      { id: 1, userNum: 3 },
-      { id: 2, userNum: 4 },
+      { id: 1, userNum: 0 },
+      { id: 2, userNum: 0 },
    ];
    res.render('room.ejs', { data });
 };
@@ -35,10 +36,7 @@ exports.renderChat = (req, res) => {
    });
 };
 
-// status가 accept인 .lenghth 를 줘야한다
-
 exports.renderUser = async (req, res) => {
-   // status 가 'accept'
    const userList = await User.findAll({
       include: [
          {

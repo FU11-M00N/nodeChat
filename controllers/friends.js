@@ -1,5 +1,11 @@
 const User = require('../models/user');
 const Friendship = require('../models/friendship');
+
+/**
+ * 친구추가 api
+ * @param {*} req
+ * @param {*} res
+ */
 exports.addFriend = async (req, res) => {
    const target = req.params.id;
 
@@ -10,15 +16,20 @@ exports.addFriend = async (req, res) => {
    const targetUser = await User.findOne({
       where: { id: target },
    });
+
    if (targetUser) {
       //친구 관계 추가
       await meUser.addFriends(targetUser);
-
-      //   await meUser.setFriends(targetUser, { through: { status: 'pending' } });
    }
    res.status(201).redirect('/users');
 };
 
+/**
+ * 친구 수락 api
+ * @param {*} req
+ * @param {*} res
+ * @returns
+ */
 exports.acceptFriend = async (req, res) => {
    const target = req.params.id;
    const meUser = await User.findOne({
@@ -27,13 +38,16 @@ exports.acceptFriend = async (req, res) => {
    const targetUser = await User.findOne({
       where: { id: target },
    });
+
    if (targetUser) {
+      // 이전 친구 요청 status 컬럼 데이터 accept로 변경
       await targetUser.setFriends([meUser], {
          through: {
             status: 'accept',
          },
       });
 
+      // 현재 유저 친구 관계 추가
       await meUser.addFriends([targetUser], {
          through: {
             status: 'accept',
@@ -45,6 +59,12 @@ exports.acceptFriend = async (req, res) => {
 
    res.redirect('/friends');
 };
+
+/**
+ * 친구 요청 거부 api
+ * @param {*} req
+ * @param {*} res
+ */
 exports.denyFriend = async (req, res) => {
    const target = req.params.id;
    const meUser = await User.findOne({
@@ -54,6 +74,7 @@ exports.denyFriend = async (req, res) => {
       where: { id: target },
    });
 
+   // 이전 친구 요청 status 컬럼 데이터 deny로 변경
    await targetUser.setFriends([meUser], {
       through: {
          status: 'deny',
@@ -62,8 +83,13 @@ exports.denyFriend = async (req, res) => {
    res.status(201).redirect('/friends');
 };
 
+/**
+ * 친구 삭제 api
+ * @param {*} req
+ * @param {*} res
+ * @returns
+ */
 exports.deleteFriend = async (req, res) => {
-   // 친구 삭제 기능 삭제하면 나한테 안보여야함
    const target = req.params.id;
 
    const meUser = await User.findOne({
@@ -75,6 +101,7 @@ exports.deleteFriend = async (req, res) => {
    });
 
    if (targetUser) {
+      // 친구 관계 삭제
       meUser.removeFriends(targetUser);
       targetUser.removeFriends(meUser);
    } else {

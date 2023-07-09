@@ -9,7 +9,7 @@
       <%- include('layout') %>
       <h3>채팅을 시작하세요~</h3>
       <h1><%=data.targetName%>님과의 1:1 채팅입니다</h1>
-      <a href="/" id="exit-btn">방 나가기</a>
+
       <fieldset>
          <legend>채팅 내용</legend>
          <div id="chat-list"></div>
@@ -24,7 +24,7 @@
 
       <script>
          let roomId = '';
-         const socket = io.connect('http://localhost:3000/dm', {
+         const socket = io.connect('http://183.102.65.238:3000/dm', {
             path: '/socket.io',
          });
 

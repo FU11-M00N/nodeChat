@@ -72,35 +72,13 @@
          showTab('inbox'); // 초기에는 'inbox' 탭을 보여줍니다.
          document.querySelectorAll("form[id^='accept-btn']").forEach(form => {
             form.addEventListener('submit', function (e) {
-               // e.preventDefault();
                alert('친구가 되었습니다.');
-               // fetch(`${e.target.action}`, { method: 'POST' })
-               //    .then(response => {
-               //       // 응답 처리
-               //       console.log(response);
-               //    })
-               //    .catch(error => {
-               //       // 에러 처리
-               //       console.log('에러 확인: ', error);
-               //    });
-               // 페이지 새로고침
-
-               // window.location.href = window.location.href;
             });
          });
 
          document.querySelectorAll("form[id^='deny-btn']").forEach(form => {
             form.addEventListener('submit', function (e) {
-               // e.preventDefault();
                alert('친구 거절이 되었습니다.');
-               // fetch(`${e.target.action}`, { method: 'POST' })
-               //    .then(response => {
-               //       // 응답 처리
-               //    })
-               //    .catch(error => {
-               //       // 에러 처리
-               //    });
-               // window.location.href = window.location.href;
             });
          });
 

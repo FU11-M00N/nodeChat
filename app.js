@@ -1,21 +1,21 @@
+require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const path = require('path');
-require('dotenv').config();
-const webSocket = require('./socket');
+const session = require('express-session');
 
 const { sequelize } = require('./models');
 
 const authRouter = require('./routes/auth');
 const indexRouter = require('./routes/index');
-const roomRouter = require('./routes/room');
 const friendsRouter = require('./routes/friends');
-const session = require('express-session');
+
+const webSocket = require('./socket');
 
 const app = express();
-
 app.set('port', 3000);
 
+// db 연결
 sequelize
    .sync({ force: false })
    .then(() => {
@@ -25,9 +25,11 @@ sequelize
       console.error(err);
    });
 
-app.use(morgan('dev'));
+app.use(morgan('combined'));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'views')));
+
+// 세션 미들웨어 설정
 const sessionMiddleware = session({
    secret: process.env.COOKIE_SECRET,
    resave: false,
@@ -36,12 +38,12 @@ const sessionMiddleware = session({
 
 app.use(sessionMiddleware);
 
+// 정적 파일 템플릿 설정
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use('/', indexRouter);
 app.use('/api/auth', authRouter);
-app.use('/room', roomRouter);
 app.use('/api/friend', friendsRouter);
 
 const server = app.listen(app.get('port'), () => {

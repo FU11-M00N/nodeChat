@@ -2,6 +2,12 @@ const path = require('path');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 
+/**
+ * 로그인 api
+ * @param {*} req
+ * @param {*} res
+ * @returns
+ */
 exports.login = async (req, res) => {
    try {
       const { username, password } = req.body;
@@ -28,6 +34,11 @@ exports.login = async (req, res) => {
    }
 };
 
+/**
+ * 회원가입 api
+ * @param {*} req
+ * @param {*} res
+ */
 exports.join = async (req, res) => {
    try {
       const { username, password } = req.body;
@@ -44,6 +55,11 @@ exports.join = async (req, res) => {
    }
 };
 
+/**
+ * 로그아웃 api
+ * @param {*} req
+ * @param {*} res
+ */
 exports.logout = (req, res) => {
    try {
       req.session.destroy();
