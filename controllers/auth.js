@@ -43,3 +43,12 @@ exports.join = async (req, res) => {
       console.error(error);
    }
 };
+
+exports.logout = (req, res) => {
+   try {
+      req.session.destroy();
+      res.redirect('/');
+   } catch (error) {
+      console.error(error);
+   }
+};

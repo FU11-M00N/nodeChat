@@ -6,17 +6,10 @@ module.exports = (server, app, sessionMiddleware) => {
    app.set('io', io);
    const room = io.of('/room');
    const chat = io.of('/chat');
+   const dm = io.of('/dm');
 
    const wrap = middleware => (socket, next) => middleware(socket.request, {}, next);
    chat.use(wrap(sessionMiddleware));
-
-   io.on('connection', socket => {
-      socket.emit('news', ' 하이 서버 응답임');
-   });
-
-   io.on('disconnect', socket => {
-      console.log('연결 종료');
-   });
 
    room.on('connection', socket => {
       console.log('room 네임스페이스 접속');
@@ -58,13 +51,13 @@ module.exports = (server, app, sessionMiddleware) => {
             chat: `${req.session.user.username} : ${msg}`,
          });
       });
-      socket.on('setNickName', data => {
-         connectedUsers.push(data);
-         socket.join(roomNum);
-         chat.to(roomNum).emit('setNickName', {
-            connectedUsers,
-         });
-      });
+      // socket.on('setNickName', data => {
+      //    connectedUsers.push(data);
+      //    socket.join(roomNum);
+      //    chat.to(roomNum).emit('setNickName', {
+      //       connectedUsers,
+      //    });
+      // });
       // 채팅 창을 나갔을 때
       socket.on('disconnect', () => {
          // 해당 유저의 닉네임의 위치를 찾음
@@ -79,6 +72,38 @@ module.exports = (server, app, sessionMiddleware) => {
             chat: `${username}님이 퇴장하셨습니다.`,
             connectedUsers: socket.adapter.rooms.get('room' + roomNum),
          });
+      });
+   });
+
+   dm.on('connection', socket => {
+      let dmRoom1 = '';
+      let dmRoom2 = '';
+      socket.emit('dmChat', '클라이언트 메시지 전달~');
+
+      socket.on('join', data => {
+         const tmpRoom1 = `m${data.me}t${data.target}`;
+         const tmpRoom2 = `m${data.target}t${data.me}`;
+         let roomId = '';
+
+         if (socket.adapter.rooms.get(tmpRoom1)?.size) {
+            // 이미 한 명이 방에 들어와있다면
+            socket.join(tmpRoom1);
+            roomId = tmpRoom1;
+         } else if (socket.adapter.rooms.get(tmpRoom2)?.size) {
+            socket.join(tmpRoom2);
+            roomId = tmpRoom2;
+         } else {
+            socket.join(tmpRoom1);
+            roomId = tmpRoom1;
+         }
+
+         dm.to(roomId).emit('join', roomId);
+      });
+
+      socket.on('chat message', data => {
+         console.log('메시지 들어옴');
+         dm.to(data.roomId).emit('chat message', data.msg);
+         // dm.to(dmRoom2).emit("chat message", msg);
       });
    });
 };

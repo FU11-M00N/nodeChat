@@ -100,3 +100,17 @@ exports.renderFriends = async (req, res) => {
       friends,
    });
 };
+
+exports.renderDm = async (req, res) => {
+   const user = await User.findOne({
+      where: { id: req.params.id },
+   });
+
+   res.render('dm.ejs', {
+      data: {
+         me: req.session.user.id,
+         target: req.params.id,
+         targetName: user.username,
+      },
+   });
+};

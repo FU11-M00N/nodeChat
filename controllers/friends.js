@@ -12,8 +12,9 @@ exports.addFriend = async (req, res) => {
    });
    if (targetUser) {
       //친구 관계 추가
-      //   await meUser.addFriends(targetUser);
-      await meUser.setFriends(targetUser, { through: { status: 'pending' } });
+      await meUser.addFriends(targetUser);
+
+      //   await meUser.setFriends(targetUser, { through: { status: 'pending' } });
    }
    res.status(201).redirect('/users');
 };
@@ -33,7 +34,7 @@ exports.acceptFriend = async (req, res) => {
          },
       });
 
-      await meUser.setFriends([targetUser], {
+      await meUser.addFriends([targetUser], {
          through: {
             status: 'accept',
          },

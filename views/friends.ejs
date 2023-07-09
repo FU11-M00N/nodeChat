@@ -6,6 +6,7 @@
       <title>Document</title>
    </head>
    <body>
+      <%- include('layout') %>
       <style>
          .tab {
             display: none;
@@ -60,7 +61,7 @@
             <form id="delete-btn-<%= friends[i].id%>" action="/api/friend/<%= friends[i].id%>" method="POST">
                <button type="submit">삭제</button>
             </form>
-            <form id="dm-btn-<%= friends[i].id%>" action="/api/friend/<%= friends[i].id%>/deny" method="POST">
+            <form id="dm-btn-<%= friends[i].id%>" action="/dm/<%= friends[i].id%>" method="GET">
                <button type="submit">dm</button>
             </form>
             <% } %>
