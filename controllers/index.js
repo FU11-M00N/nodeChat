@@ -51,14 +51,23 @@ exports.renderUser = async (req, res) => {
    const users = [];
 
    userList.forEach(user => {
-      users.push({
-         id: user.id,
-         username: user.username,
-         createdAt: user.createdAt,
-         cnt: user.friends.filter(friend => {
-            return friend.Friendship.status == 'accept';
-         }).length,
-      });
+      if (req.session.user.id !== user.id) {
+         users.push({
+            id: user.id,
+            username: user.username,
+            createdAt: user.createdAt,
+            // 친구 요청이 accept 된 친구의 개수
+            cnt: user.friends.filter(friend => {
+               return friend.Friendship.status === 'accept';
+            }).length,
+            // join한 userList 데이터에 목록에 자신(현재 로그인 한 세션)이 있으면서 status가 accept인 경우 true를 반환
+            isFriend: user.friends.filter(friend => {
+               return friend.id === req.session.user.id && friend.Friendship.status === 'accept';
+            }).length
+               ? true
+               : false,
+         });
+      }
    });
 
    res.render('user.ejs', { users });

@@ -16,7 +16,7 @@ class Friendship extends Sequelize.Model {
             underscored: false,
             modelName: 'Friendship',
             tableName: 'friendship',
-            paranoid: true,
+            paranoid: false,
             charset: 'utf8',
          },
       );
