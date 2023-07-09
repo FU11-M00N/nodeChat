@@ -41,7 +41,7 @@ exports.acceptFriend = async (req, res) => {
 
    if (targetUser) {
       // 이전 친구 요청 status 컬럼 데이터 accept로 변경
-      await targetUser.setFriends([meUser], {
+      await targetUser.addFriends([meUser], {
          through: {
             status: 'accept',
          },
