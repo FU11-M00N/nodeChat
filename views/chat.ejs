@@ -9,7 +9,7 @@
       <%- include('layout') %>
       <h3>채팅을 시작하세요~</h3>
       <h1><%= title %></h1>
-      <a href="/" id="exit-btn">방 나가기</a>
+      <a href="/room" id="exit-btn">방 나가기</a>
       <fieldset>
          <legend>채팅 내용</legend>
          <div id="chat-list"></div>
@@ -27,7 +27,7 @@
 
       <script src="/socket.io/socket.io.js"></script>
       <script>
-         const socket = io.connect('http://localhost:3000/chat', {
+         const socket = io.connect(`http://183.102.65.238:3000/chat`, {
             path: '/socket.io',
             transports: ['websocket'],
          });
@@ -37,7 +37,6 @@
          socket.emit('join', data);
 
          socket.on('join', function (data) {
-            console.log('클라이언트 데이터', data);
             document.querySelector('#cnt').innerHTML = data.cnt;
             const div = document.createElement('div');
             div.classList.add('system');
@@ -61,7 +60,8 @@
 
          document.querySelector('#chat-form').addEventListener('submit', function (e) {
             e.preventDefault();
-            console.log(e.target.chat.value);
+            console.log('클릭');
+
             if (e.target.chat.value) {
                socket.emit('chat', e.target.chat.value);
             }
