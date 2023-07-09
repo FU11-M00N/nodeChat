@@ -71,6 +71,7 @@ module.exports = (server, app, sessionMiddleware) => {
          socket.to(roomNum).emit('exit', {
             user: 'system',
             chat: `${username}님이 퇴장하셨습니다.`,
+            cnt: socket.adapter.rooms.get(roomNum)?.size,
             connectedUsers: socket.adapter.rooms.get('room' + roomNum),
          });
       });

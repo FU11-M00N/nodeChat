@@ -55,6 +55,7 @@
             chat.textContent = data.chat;
             div.appendChild(chat);
             document.querySelector('#chat-list').appendChild(div);
+            document.querySelector('#cnt').innerHTML = data.cnt;
             document.querySelector('#user').innerHTML = data.connectedUsers;
          });
 
