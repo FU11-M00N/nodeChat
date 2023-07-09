@@ -9,6 +9,7 @@ const { sequelize } = require('./models');
 const authRouter = require('./routes/auth');
 const indexRouter = require('./routes/index');
 const roomRouter = require('./routes/room');
+const friendsRouter = require('./routes/friends');
 const session = require('express-session');
 
 const app = express();
@@ -41,6 +42,7 @@ app.set('view engine', 'ejs');
 app.use('/', indexRouter);
 app.use('/api/auth', authRouter);
 app.use('/room', roomRouter);
+app.use('/api/friend', friendsRouter);
 
 const server = app.listen(app.get('port'), () => {
    console.log(app.get('port'), '번 포트 대기');

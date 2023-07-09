@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+const Friendship = require('./friendship');
 
 class User extends Sequelize.Model {
    static initiate(sequelize) {
@@ -25,9 +26,12 @@ class User extends Sequelize.Model {
          },
       );
    }
-   //    static associate(db) {
-   //       // Chat : Room => 1:N
-   //       db.User.hasMany(db.Chat);
-   //    }
+   static associate(db) {
+      // User : User => N:M
+      db.User.belongsToMany(db.User, {
+         through: Friendship,
+         as: 'friends',
+      });
+   }
 }
 module.exports = User;

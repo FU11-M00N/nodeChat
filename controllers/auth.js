@@ -15,7 +15,7 @@ exports.login = async (req, res) => {
       }
       const isValidPassword = await bcrypt.compare(password, user.password);
       if (!isValidPassword) {
-         return res.stauts(401).send('잘못된 패스워드입니다.');
+         return res.status(401).send('잘못된 패스워드입니다.');
       }
       req.session.user = {
          id: user.id,
