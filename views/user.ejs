@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=, initial-scale=1.0" />
+      <title>Document</title>
+   </head>
+   <body>
+      <%- include('layout') %>
+      <ul>
+         <% users.forEach(function(user) { %>
+         <li>
+            <p><b>ID</b>: <%= user.username %></p>
+            <p><b>가입날짜</b>: <%= user.createdAt %></p>
+            <p><b>친구수</b>: <%= user.cnt%></p>
+            <% if (!user.isFriend) { %>
+            <form id="req-btn-<%user.id%>" method="post" action="/api/friend/<%=user.id%>">
+               <p>친구 요청 : <input type="submit" value="친구요청" /></p>
+            </form>
+            <% } %>
+         </li>
+         <% }); %>
+      </ul>
+      <script>
+         document.querySelectorAll("form[id^='req-btn']").forEach(form => {
+            form.addEventListener('submit', function (e) {
+               e.preventDefault();
+               alert('친구 요청이 되었습니다.');
+               fetch(`${e.target.action}`, { method: 'POST' })
+                  .then(response => {
+                     // 응답 처리
+                  })
+                  .catch(error => {
+                     // 에러 처리
+                  });
+            });
+         });
+      </script>
+   </body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Document</title>
+   </head>
+   <body>
+      <%- include('layout') %>
+      <style>
+         .tab {
+            display: none;
+         }
+      </style>
+
+      <h3>친구 리스트</h3>
+
+      <script>
+         function showTab(tabName) {
+            const tabs = document.getElementsByClassName('tab');
+            for (let i = 0; i < tabs.length; i++) {
+               tabs[i].style.display = 'none';
+            }
+            document.getElementById(tabName).style.display = 'block';
+         }
+      </script>
+      <button onclick="showTab('inbox')">수신함</button>
+      <button onclick="showTab('list')">목록</button>
+
+      <div id="inbox" class="tab">
+         <h2>수신함</h2>
+         <ol>
+            <% for (let i = 0; i < friendsPending.length; i++) { %>
+            <li>
+               <%= friendsPending[i].username %> <br />
+               생성 날짜: <%= friendsPending[i].createdAt%>
+               <form
+                  id="accept-btn-<%= friendsPending[i].id%>"
+                  action="/api/friend/<%= friendsPending[i].id%>/accept"
+                  method="POST"
+               >
+                  <button type="submit">수락</button>
+               </form>
+               <form
+                  id="deny-btn-<%= friendsPending[i].id%>"
+                  action="/api/friend/<%= friendsPending[i].id%>/deny"
+                  method="POST"
+               >
+                  <button type="submit">거부</button>
+               </form>
+            </li>
+            <% } %>
+         </ol>
+      </div>
+
+      <div id="list" class="tab">
+         <h2>목록</h2>
+         <ol>
+            <% for (let i = 0; i < friends.length; i++) { %> 생성 날짜: <%= friends[i].createdAt%>
+            <li><%= friends[i].username %></li>
+            <form id="delete-btn-<%= friends[i].id%>" action="/api/friend/<%= friends[i].id%>" method="POST">
+               <button type="submit">삭제</button>
+            </form>
+            <form id="dm-btn-<%= friends[i].id%>" action="/dm/<%= friends[i].id%>" method="GET">
+               <button type="submit">dm</button>
+            </form>
+            <% } %>
+         </ol>
+      </div>
+
+      <script>
+         showTab('inbox'); // 초기에는 'inbox' 탭을 보여줍니다.
+         document.querySelectorAll("form[id^='accept-btn']").forEach(form => {
+            form.addEventListener('submit', function (e) {
+               // e.preventDefault();
+               alert('친구가 되었습니다.');
+               // fetch(`${e.target.action}`, { method: 'POST' })
+               //    .then(response => {
+               //       // 응답 처리
+               //       console.log(response);
+               //    })
+               //    .catch(error => {
+               //       // 에러 처리
+               //       console.log('에러 확인: ', error);
+               //    });
+               // 페이지 새로고침
+
+               // window.location.href = window.location.href;
+            });
+         });
+
+         document.querySelectorAll("form[id^='deny-btn']").forEach(form => {
+            form.addEventListener('submit', function (e) {
+               // e.preventDefault();
+               alert('친구 거절이 되었습니다.');
+               // fetch(`${e.target.action}`, { method: 'POST' })
+               //    .then(response => {
+               //       // 응답 처리
+               //    })
+               //    .catch(error => {
+               //       // 에러 처리
+               //    });
+               // window.location.href = window.location.href;
+            });
+         });
+
+         document.querySelectorAll("form[id^='delete-btn']").forEach(form => {
+            form.addEventListener('submit', function (e) {
+               e.preventDefault();
+               alert('친구 삭제가 되었습니다.');
+               fetch(`${e.target.action}`, { method: 'DELETE' })
+                  .then(response => {
+                     // 응답 처리
+                  })
+                  .catch(error => {
+                     // 에러 처리
+                  });
+            });
+         });
+      </script>
+   </body>
+</html>
